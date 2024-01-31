@@ -8,8 +8,11 @@
     "@testing-library/user-event": "^13.5.0",
     "body-parser": "^1.20.2",
     "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "fetch": "^1.1.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -20,7 +23,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node ./server.js",
+    "go": "concurrently -s first -k \"npm run server\" \"npm run start\""
   },
   "eslintConfig": {
     "extends": [

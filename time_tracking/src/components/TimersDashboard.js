@@ -1,27 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditableTimerList from './EditableTimerList'
 import ToggleableTimerForm from './ToggleableTimerForm'
 import {v4 as uuidv4} from 'uuid'
 
-const DATA = [
-	{
-		title: 'Practice Squat',
-		project: 'Gym Chores',
-		id: uuidv4(),
-		elapsed: 5456099,
-		runningSince: Date.now(),
-	},
-	{
-		title: 'Bake squash',
-		project: 'Kitchen Chores',
-		id: uuidv4(),
-		elapsed: 1273998,
-		runningSince: null,
-	}
-];
-
 const TimersDashboard = () => {
-	const [timers, setTimers] = useState(DATA);
+	const [timers, setTimers] = useState([]);
+	
+	useEffect(() => {
+		loadTimersFromServer();
+		setInterval(loadTimersFromServer, 5000)
+	}, []);
+	
+	const loadTimersFromServer = () => {
+		window.client.getTimers(
+		(serverTimers) => setTimers(serverTimers)
+		)
+	}
+	
 	
 	const handleCreateFormSubmit = (timer) => {
 		createTimer(timer)
@@ -30,6 +25,7 @@ const TimersDashboard = () => {
 	const createTimer = (timer) => {
 		const t = window.helpers.newTimer(timer);
 		setTimers(timers.concat(t));
+		window.client.createTimer(t);
 	}
 	
 	const handleEditFormSubmit = (attrs) => {
@@ -47,6 +43,7 @@ const TimersDashboard = () => {
 				return timer;
 			}
 		}))
+		window.client.updateTimer(attrs);
 	}
 	
 	const handleTrashClick = (timerId) => {
@@ -55,27 +52,31 @@ const TimersDashboard = () => {
 	
 	const deleteTimer = (timerId) => {
 		setTimers(prev => prev.filter((t) => t.id !== timerId));
+		window.client.deleteTimer({ id: timerId })
 	}
 	
-	const startTimer = (timerId) => {
-		const now = Date.now();
+	const startTimer = (id) => {
+		const start = Date.now();
+		
 		setTimers(prev => prev.map((timer) => {
-			if(timer.id === timerId) {
+			if(timer.id === id) {
 				return Object.assign({}, timer, {
-					runningSince: now
+					runningSince: start
 				})
 			} else {
 				return timer;
 			}
-		}))
+		}));
+		
+		window.client.startTimer({id, start})
 	}
 	
-	const stopTimer = (timerId) => {
-		const now = Date.now();
+	const stopTimer = (id) => {
+		const stop = Date.now();
 		
 		setTimers(prev => prev.map(timer => {
-			if(timer.id === timerId) {
-				const lastElapsed = now - timer.runningSince;
+			if(timer.id === id) {
+				const lastElapsed = stop - timer.runningSince;
 				return Object.assign({}, timer, {
 					elapsed: timer.elapsed + lastElapsed,
 					runningSince: null
@@ -84,6 +85,9 @@ const TimersDashboard = () => {
 				return timer;
 			}
 		}))
+		
+		window.client.stopTimer({ id, stop })
+		
 	}
 	
 	const handleStartClick = (timerId) => {
