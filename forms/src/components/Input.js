@@ -5,19 +5,34 @@ import Electives from '../components/api/electives.json';
 
 let apiClient;
 
+apiClient = {
+	loadPeople: function() {
+		return {
+			then: function(cb) {
+				setTimeout(() => {
+					cb(JSON.parse(localStorage.people || '[]'));
+				}, 1000);
+			}
+		}
+	},
+	savePeople: function(people) {
+		const success = !!(this.count++ % 2);
+		
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				if(!success) return reject({success});
+				
+				localStorage.people = JSON.stringify(people);
+				return resolve({success})
+			}, 1000)
+		});
+	},
+	count: 1
+}
+
 const Courses = {
 	core: Core,
 	electives: Electives,
-}
-
-function apiClient(department) {
-	return {
-		then: function(cb) {
-			setTimeout(() => {
-				cb(Courses[department]);
-			}, 1000)
-		}
-	}
 }
 
 const NewField = ({name, value, placeholder, validate, onChange}) => {
@@ -135,18 +150,20 @@ const Input = () => {
 		
 		if(validate()) return;
 		
-		const newPeople = [field, ...people];
+		const newPeople = [fields, ...people];
 		
 		setSaveStatus('SAVING');
 		
-		apiClient.savePeople(people).then(() => {
-			setPeople(people);
-			setFields(initialFields);
-			setSaveStatus('SUCCESS');
-		}).catch(err => {
-			console.error(err);
-			setSaveStatus('ERROR')
-		})
+		apiClient
+			.savePeople(people)
+			.then(() => {
+				setPeople(people);
+				setFields(initialFields);
+				setSaveStatus('SUCCESS');
+			}).catch(err => {
+				console.error(err);
+				setSaveStatus('ERROR')
+			})
 	}
 	
 	const onFieldsChange = ({ name, value, error}) => {
@@ -198,9 +215,34 @@ const Input = () => {
 							validate={val => (isEmail(val) ? false : 'Invalid email.')}
 						/>
 					<br />
-					<input type='submit' value='Submit' />			
+					
+					<CourseSelect 
+						department={fields.department}
+						course={fields.course}
+						onChange={onFieldsChange}
+					/>
+					
+					<br />
+					
+					{
+						{
+							SAVING: <input value={'Saving...'} type='submit' disabled />,
+							SUCCESS: <input value={'Saved!'} type='submit' disabled />,
+							ERROR: (<input value='Save Failed - Retry?' type='submit' disabled={validate()} />),
+							READY: (<input value='Submit' type='submit' disabled={validate()} />)
+						}[saveStatus]
+					}
+							
 				</form>
-				{people.map(({name, email}, idx) => (<p key={idx}>{name}, {email}</p>))}
+				
+				<div>
+					<h3>People</h3>
+					<ul>
+						{people.map(({name, email, department, course}, i) => (
+							<li key={i}>{[name, email, department,course].join(' - ')}</li>
+						))}
+					</ul>
+				</div>
 			</div>
 		)
 	}
