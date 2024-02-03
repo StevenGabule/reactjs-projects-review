@@ -130,12 +130,23 @@ const initialFields = {
 	department: null,
 }
 
-const Input = () => {
+const Input = ({ saveStatus, people }) => {
 	const [fields, setFields] = useState(initialFields);
 	const [fieldErrors, setFieldErrors] = useState({});
-	const [people, setPeople] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [saveStatus, setSaveStatus] = useState('READY');
+	const [saveStatusLabel, setSaveStatusLabel] = useState(saveStatus);
+	
+	const onFormSubmit = evt => {
+		evt.preventDefault();
+		if(validate()) return;
+		onSubmit([...people, fields])
+	}
+	
+	const onInputChange = ({ name, value, error }) => {
+		fields[name] = value;
+		fieldErrors[name] = value;
+		setFields(fields);
+		setFieldErrors(fieldErrors);
+	}
 	
 	useEffect(() => {
 		setIsLoading(true);
@@ -178,10 +189,8 @@ const Input = () => {
 	
 	const validate = () => {
 		const { name, email, course, department } = fields;
-		const personFieldErrors = fieldErrors;
-		const errMessages = Object.keys(personFieldErrors).filter(k => personFieldErrors[k]);
+		const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
 		
-
 		if(!name) return true;
 		if(!email) return true;
 		if(!course) return true;
@@ -193,6 +202,11 @@ const Input = () => {
 	if(isLoading) {
 		return <img alt='Loading' src='/img/loading.gif' />
 	} else {
+		const dirty = Object.keys(fields).length;
+		if(saveStatusLabel == 'SUCCESS' && dirty) {
+			setSaveStatusLabel('READY');
+		}
+		
 		return (
 			<div>
 				<h1>Sign Up Sheet</h1>
@@ -221,7 +235,6 @@ const Input = () => {
 						course={fields.course}
 						onChange={onFieldsChange}
 					/>
-					
 					<br />
 					
 					{
@@ -230,7 +243,7 @@ const Input = () => {
 							SUCCESS: <input value={'Saved!'} type='submit' disabled />,
 							ERROR: (<input value='Save Failed - Retry?' type='submit' disabled={validate()} />),
 							READY: (<input value='Submit' type='submit' disabled={validate()} />)
-						}[saveStatus]
+						}[saveStatusLabel]
 					}
 							
 				</form>
