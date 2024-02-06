@@ -237,14 +237,12 @@ const Input = ({ saveStatus, people }) => {
 					/>
 					<br />
 					
-					{
-						{
-							SAVING: <input value={'Saving...'} type='submit' disabled />,
-							SUCCESS: <input value={'Saved!'} type='submit' disabled />,
-							ERROR: (<input value='Save Failed - Retry?' type='submit' disabled={validate()} />),
-							READY: (<input value='Submit' type='submit' disabled={validate()} />)
-						}[saveStatusLabel]
-					}
+					{{
+						SAVING: <input value={'Saving...'} type='submit' disabled />,
+						SUCCESS: <input value={'Saved!'} type='submit' disabled />,
+						ERROR: (<input value='Save Failed - Retry?' type='submit' disabled={validate()} />),
+						READY: (<input value='Submit' type='submit' disabled={validate()} />)
+					}[saveStatusLabel]}
 							
 				</form>
 				

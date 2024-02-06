@@ -26,7 +26,7 @@ function savePeopleRequest() {
 	return { type: SAVE_PEOPLE_REQUEST }
 }
 
-function savePeopleFailed(error) {
+function savePeopleFailure(error) {
 	return { type: SAVE_PEOPLE_FAILURE, error }
 } 
 
@@ -67,9 +67,23 @@ const apiClient = {
 }
 
 
+export function fetchPeople() {
+	return function(dispatch) {
+		dispatch(fetchPeopleSuccess());
+		apiClient.loadPeople().then((people) => {
+			dispatch(fetchPeopleSuccess(people));
+		})
+	}
+}
 
-
-
+export function savePeoepl(people) {
+	return function(dispatch) {
+		dispatch(savePeopleRequest());
+		apiClient.savePeople(people)
+			.then((resp) => { dispatch(savePeopleSuccess(people)) })
+			.catch((err) => { dispatch(savePeopleFailure(err)) })
+	}
+}
 
 
 
