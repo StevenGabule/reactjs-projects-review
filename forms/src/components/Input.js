@@ -130,10 +130,9 @@ const initialFields = {
 	department: null,
 }
 
-const Input = ({ saveStatus, people }) => {
+const Input = ({ saveStatus, people, isLoading, onSubmit }) => {
 	const [fields, setFields] = useState(initialFields);
 	const [fieldErrors, setFieldErrors] = useState({});
-	const [saveStatusLabel, setSaveStatusLabel] = useState(saveStatus);
 	
 	const onFormSubmit = evt => {
 		evt.preventDefault();
@@ -161,20 +160,7 @@ const Input = ({ saveStatus, people }) => {
 		
 		if(validate()) return;
 		
-		const newPeople = [fields, ...people];
-		
-		setSaveStatus('SAVING');
-		
-		apiClient
-			.savePeople(people)
-			.then(() => {
-				setPeople(people);
-				setFields(initialFields);
-				setSaveStatus('SUCCESS');
-			}).catch(err => {
-				console.error(err);
-				setSaveStatus('ERROR')
-			})
+		onSubmit([fields, ...people]);
 	}
 	
 	const onFieldsChange = ({ name, value, error}) => {
@@ -203,8 +189,9 @@ const Input = ({ saveStatus, people }) => {
 		return <img alt='Loading' src='/img/loading.gif' />
 	} else {
 		const dirty = Object.keys(fields).length;
-		if(saveStatusLabel == 'SUCCESS' && dirty) {
-			setSaveStatusLabel('READY');
+		let status = saveStatus;
+		if(saveStatus == 'SUCCESS' && dirty) {
+			status = 'READY';
 		}
 		
 		return (

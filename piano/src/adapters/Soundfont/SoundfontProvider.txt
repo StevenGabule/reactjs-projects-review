@@ -1,0 +1,41 @@
+// import { Keyboard } from './../../components/Keyboard';
+// import { FunctionComponent, ReactElement, useEffect } from 'react'
+// import { InstrumentName } from 'soundfont-player'
+// import { MidiValue } from '../../domain/note'
+// import { useSoundfont } from './useSoundfont';
+
+// type ProviderProps = {
+// 	instrument?: InstrumentName
+// 	AudioContext: AudioContextType
+// 	render(props: ProvidedProps): ReactElement
+// }
+
+// type ProvidedProps = {
+// 	loading: boolean
+// 	play(note: MidiValue): Promise<void>
+// 	stop(note: MidiValue): Promise<void>
+// }
+
+// function renderKeyboard({ play, stop, loading }: ProvidedProps): ReactElement {
+// return (<Keyboard play={play} stop={stop} loading={loading} />)
+// }
+
+// export const SoundfontProvider: FunctionComponent<ProviderProps> = ({
+// 	AudioContext,
+// 	instrument,
+// 	render
+// 	}) => {
+// 		const { loading, current, play, stop, load } = useSoundfont({
+// 			AudioContext,
+// 		});
+
+// 		useEffect(() => {
+// 			if (!loading && instrument !== current) loadInstrument()
+// 			}, [loadInstrument, loading, instrument, current]);
+
+// 			return render({
+// 				loading,
+// 				play,
+// 				stop
+// 				})
+// 	}
