@@ -1,12 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/voting_app/node_modules
-/time_tracking/node_modules
-/forms/node_modules
-/piano/node_modules
-/drawing-board/node_modules
-
+/node_modules
 /.pnp
 .pnp.js
 
