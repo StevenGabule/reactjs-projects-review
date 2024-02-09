@@ -6,6 +6,7 @@ const initialState: RootState["currentStroke"] = {
 	points: [],
 	color: "#000"
 }
+
 const slice = createSlice({
 	name: "currentStroke",
 	initialState,
@@ -26,3 +27,6 @@ const slice = createSlice({
 		})
 	}
 })
+
+export const currentStroke = slice.reducer;
+export const { beginStroke, updateStroke, setStrokeColor } = slice.actions;

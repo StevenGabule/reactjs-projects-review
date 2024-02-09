@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCanvas } from '../CanvasContext';
 import { saveAs } from 'file-saver';
-import { getCanvasImage } from '../canvasUtils';
+import { getCanvasImage } from '../utils/canvasUtils';
 
 export const FilePanel = () => {
   const canvasRef = useCanvas();

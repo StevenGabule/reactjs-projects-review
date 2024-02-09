@@ -23,6 +23,14 @@ export const clearCanvas = (canvas: HTMLCanvasElement) => {
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+export const setCanvasSize = (canvas: HTMLCanvasElement, width: number, height: number) => {
+	canvas.width = width * 2;
+	canvas.height = height * 2;
+	canvas.style.width = `${width}px`;
+	canvas.style.height = `${height}px`;
+	canvas.getContext('2d')?.scale(2,2)
+}
+
 export const getCanvasImage = (canvas: HTMLCanvasElement | null): Promise<null | Blob> => {
 	return new Promise((resolve, reject) => {
 		if (!canvas) {

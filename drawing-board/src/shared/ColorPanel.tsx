@@ -1,6 +1,6 @@
+import React  from 'react';
 import { useDispatch } from 'react-redux'
-import { setStrokeColor } from '../actions';
-
+import { setStrokeColor } from "../modules/currentStroke/slice"
 
 const COLORS = [
   "#000000",
@@ -38,7 +38,7 @@ export const ColorPanel = () => {
 	const onColorChange =  (color: string) => {
 		dispatch(setStrokeColor(color));
 	}
-	
+  
 	return (
 		<div className='window colors-panel'>
 			<div className="title-bar">

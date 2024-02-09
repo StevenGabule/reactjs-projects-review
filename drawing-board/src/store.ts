@@ -1,13 +1,24 @@
-import { configureStore, getDefaultMiddleware, Action } from "@reduxjs/toolkit"
-import { currentStroke } from './modules/currentStrokeSlice'
-import { historyIndex } from './modules/historyIndexSlice'
-import { strokes } from './modules/strokesSlice'
-import logger from "redux-logger"
-import { RootState } from "./utils/types"
+import {
+	configureStore,
+	ThunkAction,
+	Action
+} from '@reduxjs/toolkit';
 
-const middleware = [...getDefaultMiddleware(), logger];
+import { currentStroke } from './modules/currentStroke/slice';
+import { modalVisible } from './modules/modals/slice';
+import { projectsList } from './modules/projectsList/slice';
+
+import historyIndex from './modules/historyIndex/slice';
+import strokes from './modules/strokes/slice';
+import logger from 'redux-logger';
+import { RootState } from './utils/types';
+
+
+// const middleware = [...getDefaultMiddleware(), logger]
 
 export const store = configureStore({
-	reducer: { historyIndex, strokes, currentStroke },
-	middleware
+	reducer: { historyIndex, strokes, currentStroke, modalVisible, projectsList},
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 })
+
+export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>
