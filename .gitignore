@@ -6,6 +6,9 @@
 /forms/node_modules
 /piano/node_modules
 /drawing-board/node_modules
+/chat-group/node_modules
+/chat-group/.next
+/chat-group/.idea
 
 /.pnp
 .pnp.js
